@@ -1,0 +1,28 @@
+{
+  "name": "entrega_final",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server/main.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.2.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.1",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "pino": "^8.11.0"
+  }
+}
