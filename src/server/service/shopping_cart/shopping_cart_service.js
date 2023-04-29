@@ -25,13 +25,11 @@ export class ShoppingCartService {
 
         if (!idUser || !idUser.trim()) 
             throw new ErrIdNotFound(idUser);
-        
+
         const CART = await this.#shoppingCartDao
                                 .findByShoppingCartProp(
-
                                     { idUser }, 
-                                    { error: false }
-
+                                    false
                                 );
 
         if (!CART) throw new ErrIdNotFound(idUser);

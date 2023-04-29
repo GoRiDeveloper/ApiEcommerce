@@ -10,13 +10,13 @@ export class ProductDTO {
         VALIDATIONS.emptyField({ image });
         VALIDATIONS.alphabeticValidation({ name });
         VALIDATIONS.alphabeticValidation({ description });
-        VALIDATIONS.itsNumber(price);
+        VALIDATIONS.itsNumber({ price });
         VALIDATIONS.imgValidation(image);
 
         this.id          = id;
         this.name        = name;
         this.description = description;
-        this.price       = email;
+        this.price       = VALIDATIONS.floatValidation({ price });;
         this.image       = image;
 
     };

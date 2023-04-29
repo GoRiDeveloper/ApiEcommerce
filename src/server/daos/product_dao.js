@@ -59,7 +59,7 @@ export class ProductDAO {
         QUERY_PROP = { name: product.name },
         EXISTS     = await this.findByProp(
             QUERY_PROP, 
-            { error: false }
+            false
         );
 
         if (EXISTS) throw new ErrProductAlreadyExists();

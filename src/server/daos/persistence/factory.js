@@ -21,7 +21,8 @@ containerOrders;
 
 switch (mode) {
 
-    case "production" || "development":
+    case "prod": 
+    case "dev":
 
         containerAdmin = new MongoDBDao({
             client: mdb,

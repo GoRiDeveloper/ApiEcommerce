@@ -7,6 +7,8 @@ import ErrInt from "../errors/error_int.js";
 import ErrNumber from "../errors/error_number.js";
 import ErrUrl from "../errors/error_url.js";
 import ErrArray from "../errors/error_array.js";
+import ErrWeakPass from "../errors/error_weak_password.js";
+import ErrProps from "../errors/error_props.js";
 
 export class Validations {
 
@@ -14,7 +16,7 @@ export class Validations {
 
         const 
         
-        KEY   = getKey(item, 0)
+        KEY   = getKey(item, 0),
         VALUE = getValue(item, 0);
 
         if (!VALUE.trim() || VALUE.length < 1)
@@ -69,6 +71,16 @@ export class Validations {
 
     };
 
+    floatValidation (item) {
+
+        const NEW_ITEM = parseFloat(getValue(item, 0));
+
+        if (isNaN(NEW_ITEM)) throw new ErrNumber(getKey(item, 0));
+
+        return NEW_ITEM;
+
+    };
+
     imgValidation (img) {
 
         const IMG_EXP_REG = /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig.test(img);
@@ -83,6 +95,9 @@ export class Validations {
     };
 
     verifyProdToAdd (prod) {
+
+        if (!prod || !prod?.id || !prod?.quantity) 
+            throw new ErrProps(prod);
 
         const { id, quantity } = prod;
 
@@ -99,6 +114,16 @@ export class Validations {
     async verifyEmail (email) {
 
         return await ADMIN_DAO.verifyAdmin(email);
+
+    };
+
+    async verifyPass (pass) {
+
+        this.emptyField({ pass });
+
+        const PASS_REG_EXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{5,}$/.test(pass);
+
+        if (!PASS_REG_EXP) throw new ErrWeakPass(pass);
 
     };
 

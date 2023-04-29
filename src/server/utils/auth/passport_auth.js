@@ -8,4 +8,5 @@ let options = {
 export const 
 
 REGISTER = passport.authenticate("register", options),
-LOGIN    = passport.authenticate("login", options);
+LOGIN    = passport.authenticate("login", options),
+JWT      = passport.authenticate("jwt", options);

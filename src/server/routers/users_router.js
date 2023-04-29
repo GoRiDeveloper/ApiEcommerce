@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { isAuth } from "../middlewares/auth.js";
-import { REGISTER } from "../utils/auth/passport_auth.js";
+import { JWT, REGISTER } from "../utils/auth/passport_auth.js";
 import { 
     
     controllerGetUser, 
@@ -10,5 +10,5 @@ import {
 
 export const USERS_ROUTER = Router();
 
-USERS_ROUTER.get("/", isAuth, controllerGetUser);
+USERS_ROUTER.get("/", isAuth, JWT, controllerGetUser);
 USERS_ROUTER.post("/", REGISTER, controllerPostUser);

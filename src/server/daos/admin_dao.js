@@ -26,7 +26,7 @@ export class AdminDAO {
 
         const 
         
-        EMAILS = await this.getAdminEmails();
+        EMAILS = await this.getAdminEmails(),
         VERIFY = EMAILS.includes(email);
 
         if (!VERIFY) return false;

@@ -1,9 +1,8 @@
-import { USER_SERVICE } from "../service/user/index.js";
 import ErrAdmin from "../models/errors/error_admin.js";
 
-export function isAdmin ({ headers }, res, next) {
+export function isAdmin (req, res, next) {
 
-    const USER = USER_SERVICE.getDataUser(headers);
+    const USER = req.user;
 
     if (USER.role !== "Admin") throw new ErrAdmin();
 

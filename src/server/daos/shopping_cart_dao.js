@@ -1,4 +1,4 @@
-import { PROD_SERVICE } from "../service/products/index.js";
+import { PROD_DAO } from "./persistence/factory.js";
 import { getKey, getValue } from "../utils/object_utils.js";
 import { CONFIG, DEFAULT_MODE, configId } from "../../config/config.js";
 import ErrIDNotFound from "../models/errors/error_id_not_found.js";
@@ -28,20 +28,19 @@ export class ShoppingCartDAO {
         let newProds = [];
         const { products } = shoppingCart;
 
-        products.forEach(prod => {
-            
-            let newProd = PROD_SERVICE
-                            .getProductById(
-                                configId(prod)
-                            );
-            
+        for await (const prod of products) {
+
+            let newProd = await PROD_DAO.getProduct(configId(prod));
+
             newProd.quantity = prod.quantity;
 
             newProds.push(newProd);
 
-        });
+        };
 
         shoppingCart.products = newProds;
+
+        return shoppingCart;
 
     };
 
@@ -60,13 +59,16 @@ export class ShoppingCartDAO {
                                     configId(prod) === configId(productToAdd)
                             );
 
+        let id = configId(shoppingCart);
+
         if (EXISTS) {
 
-            let id = configId(shoppingCart), fieldsToUpdate, optionsUpdate;
+            let fieldsToUpdate, optionsUpdate;
 
             switch (CONFIG.mode) {
 
-                case "development" || "production":
+                case "dev":
+                case "prod":
 
                     const NEW_QTY = productToAdd.quantity + EXISTS.quantity;
 
@@ -76,8 +78,8 @@ export class ShoppingCartDAO {
                     optionsUpdate = {
 
                         arrayFilters: [{
-                            "prod._id": {
-                                $eq: EXISTS._id
+                            "prod.id": {
+                                $eq: configId(EXISTS)
                             }
                         }]
 
@@ -101,25 +103,40 @@ export class ShoppingCartDAO {
 
             };
 
-            await this.#persistence
-                        .patchOne(
+            return await this.#persistence
+                            .patchOne(
 
-                            id,
-                            fieldsToUpdate, 
-                            !DEFAULT_MODE && optionsUpdate
+                                id,
+                                fieldsToUpdate, 
+                                !DEFAULT_MODE && optionsUpdate
 
-                        );
+                            );
+                            
         } else {
 
             const { products } = shoppingCart;
 
             products.push(productToAdd);
 
-            return await this.#persistence
-                                .updateOne(
-                                    id,
-                                    { products }
-                                );
+            switch (CONFIG.mode) {
+
+                case "prod":
+                case "dev":
+
+                    return await this.#persistence
+                                        .updateOne(
+                                            id,
+                                            { products }
+                                        );
+                default:
+
+                    return await this.#persistence
+                                        .patchOne(
+                                            id,
+                                            { products }
+                                        );
+
+            };
 
         };
 
@@ -152,11 +169,12 @@ export class ShoppingCartDAO {
 
         switch (CONFIG.mode) {
 
-            case "development" || "production":
+            case "dev":
+            case "prod":
 
                 fieldsToUpdate = { 
                     $pull: {
-                        "products._id": EXISTS._id
+                        products: { id: configId(EXISTS) }
                     }
                 };
 
@@ -166,8 +184,6 @@ export class ShoppingCartDAO {
                                     id,
                                     fieldsToUpdate
                                 );
-
-            break;
 
             default:
 
@@ -199,7 +215,8 @@ export class ShoppingCartDAO {
 
         switch (CONFIG.mode) {
 
-            case "development" || "production":
+            case "dev":
+            case "prod":
 
                 fieldsToUpdate = { products: [] };
 

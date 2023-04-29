@@ -1,6 +1,6 @@
 import { createTransport } from "nodemailer";
 import { Email } from "../models/email_model.js";
-import { CONFIG } from "../../config/config.js";
+import { CONFIG, configId } from "../../config/config.js";
 import ErrSendEmail from "../models/errors/error_send_email.js";
 
 export class EmailDAO {
@@ -28,45 +28,26 @@ export class EmailDAO {
 
     async sendOrderEmails (data, emailUser) {
 
+        let info = data.map(prod => {
+
+            return {
+
+                id: configId(prod),
+                qty: prod.quantity
+
+            };
+
+        });
+
         const
         
         DATA_HTML_ADMIN  = {
-
             header: `Pedido de : ${emailUser}`,
-            info : {
-
-                ...(data.forEach(prod => { 
-
-                    return {
-
-                        id: prod.id, 
-                        qty: prod.quantity
-
-                    } 
-
-                }))
-
-            }
-
+            info
         },
         DATA_HTML_USER   = {
-
             header: `Usuario : ${emailUser}`,
-            info : {
-
-                ...(data.forEach(prod => { 
-
-                    return {
-
-                        id: prod.id, 
-                        qty: prod.quantity
-
-                    } 
-
-                }))
-
-            }
-
+            info
         },
         HTML_ADMIN       = Email.createHTML(DATA_HTML_ADMIN),
         HTML_USER        = Email.createHTML(DATA_HTML_USER),
@@ -89,8 +70,8 @@ export class EmailDAO {
         EMAIL_ADMIN      = new Email(DATA_EMAIL_ADMIN),
         EMAIL_USER       = new Email(DATA_EMAIL_USER);
 
-        await this.sendEmail(EMAIL_ADMIN);
-        await this.sendEmail(EMAIL_USER);
+        await this.sendEmail(EMAIL_ADMIN.asDto());
+        await this.sendEmail(EMAIL_USER.asDto());
 
     };
 

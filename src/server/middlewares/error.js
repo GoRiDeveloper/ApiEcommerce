@@ -16,6 +16,7 @@ const errorTypes = {
     failSend: "FAIL_SEND",
     userExists: "USER_ALREADY_EXISTS",
     productExists: "PRODUCT_ALREADY_EXISTS",
+    weakPass: "WEAK_PASS",
     wrongPass: "WRONG_PASS",
     userPassNeeded: "USER_AND_PASS_NEEDED",
     needAuth: "NEED_AUTH",
@@ -26,7 +27,8 @@ const errorTypes = {
     intInvalid: "INT_INVALID",
     invalidNumber: "INVALID_NUMBER",
     dbError: "ERROR_CONNECTING_DATABASE",
-    invalidIndex: "INVALID_INDEX"
+    invalidIndex: "INVALID_INDEX",
+    orderEmpty: "YOUR_ORDER_CANNOT_BE_EMPTY"
 
 };
 
@@ -38,21 +40,19 @@ export function errorHandler (error, req, res, next) {
             res.status(502)
         break;
 
-        case 
-            errorTypes.dbError ||
-            errorTypes.notRead ||
-            errorTypes.notInfo ||
-            errorTypes.failSend:
+        case errorTypes.dbError:
+        case errorTypes.notRead:
+        case errorTypes.notInfo:
+        case errorTypes.failSend:
 
-                res.status(500)
+            res.status(500)
 
         break;
 
-        case
-            errorTypes.notFoundByProps ||
-            errorTypes.idNotFound:
+        case errorTypes.notFoundByProps:
+        case errorTypes.idNotFound:
 
-                res.status(404)
+            res.status(404)
 
         break;
 
@@ -63,26 +63,27 @@ export function errorHandler (error, req, res, next) {
         case errorTypes.needAuth:
             res.status(401)
         break;
+        
+        case errorTypes.userPassNeeded:
+        case errorTypes.productExists:
+        case errorTypes.invalidNumber:
+        case errorTypes.passRequired:
+        case errorTypes.invalidEmail:
+        case errorTypes.invalidIndex:
+        case errorTypes.notAnObject:
+        case errorTypes.notAnArray:
+        case errorTypes.passNeeded:
+        case errorTypes.failUpdate:
+        case errorTypes.failDelete:
+        case errorTypes.userExists:
+        case errorTypes.emptyField:
+        case errorTypes.invalidUrl:
+        case errorTypes.intInvalid:
+        case errorTypes.orderEmpty:
+        case errorTypes.wrongPass:
+        case errorTypes.weakPass:
 
-        case
-            errorTypes.userPassNeeded ||
-            errorTypes.productExists ||
-            errorTypes.invalidNumber ||
-            errorTypes.passRequired ||
-            errorTypes.invalidEmail ||            
-            errorTypes.invalidIndex ||
-            errorTypes.notAnObject ||
-            errorTypes.notAnArray ||
-            errorTypes.passNeeded ||
-            errorTypes.failUpdate ||
-            errorTypes.failDelete ||
-            errorTypes.userExists ||
-            errorTypes.emptyField ||
-            errorTypes.invalidUrl ||
-            errorTypes.wrongPass ||
-            errorTypes.intInvalid:
-
-                res.status(400)
+            res.status(400)
 
         break;
 

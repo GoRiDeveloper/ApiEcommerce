@@ -1,5 +1,5 @@
 import pino from "pino";
-import { DEV_MODE } from "../../config/config.js";
+import { DEV_MODE, DEFAULT_MODE } from "../../config/config.js";
 
 export let logger;
 
@@ -19,6 +19,6 @@ function devLogger () {
 
 };
 
-DEV_MODE
-    ? logger = devLogger() 
-    : logger = prodLogger();
+if (!DEV_MODE && !DEFAULT_MODE) logger = prodLogger();
+if (!DEV_MODE && DEFAULT_MODE) logger = devLogger();
+if (DEV_MODE) logger = devLogger();

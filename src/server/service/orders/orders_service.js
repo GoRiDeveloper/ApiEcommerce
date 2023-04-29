@@ -18,8 +18,8 @@ export class OrderService {
         const 
 
         CART      = await SHOPPING_CART_SERVICE.getCartProductsInfo(idUser),
-        PRODS     = CART.products,
-        NEW_ORDER = new Order({ idUser, products: PRODS }),
+        PRODS     = [ ...CART.products ],
+        NEW_ORDER = new Order({ idUser, prods: PRODS }),
         ORDER_DTO = NEW_ORDER.asDto();
         
         await SHOPPING_CART_SERVICE.emptyCart(CART);

@@ -31,7 +31,7 @@ async function controllerPutProduct ({ body, params: { id } }, res) {
 
 };
 
-async function controllerDeleteProduct (req, res) {
+async function controllerDeleteProduct ({ params: { id } }, res) {
 
     const DELETE = await PROD_SERVICE.deleteProductById(id);
     res.status(200).json(DELETE);

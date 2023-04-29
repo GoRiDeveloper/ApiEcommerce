@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import ErrCouldNotGet from "../server/models/errors/error_could_not_get.js";
 
 config({ path: ".env" });
 
@@ -10,6 +11,8 @@ CONFIG = {
     port:              parseInt(process.env.PORT),
     cnxStrDev:         process.env.CNX_STR_LOCAL,
     cnxStrProd:        process.env.CNX_STR_REMOTE,
+    mDBLocalUser:      process.env.USER_ADMIN_MDB_LOCAL,
+    mDBLocalPass:      process.env.PASS_ADMIN_MDB_LOCAL,
     dbName:            process.env.DB_NAME,
     jwtSecret:         process.env.JWT_SECRET,
     salt:              parseInt(process.env.SALT),
@@ -49,16 +52,17 @@ CONFIG = {
 
 DEFAULT_MODE = (
 
-    (CONFIG.mode !== "production") && 
-    (CONFIG.mode !== "development")
+    (CONFIG.mode !== "prod") && 
+    (CONFIG.mode !== "dev")
     
 ),
-DEV_MODE = CONFIG.mode === "development";
+DEV_MODE = CONFIG.mode === "dev";
 
 function configId (element) {
 
-    if (!element) throw new Element();
-    if (!DEFAULT_MODE) return element._id;
+    if (!element) throw new ErrCouldNotGet();
+    if (!DEFAULT_MODE && Object.keys(element).includes("_id")) 
+        return element._id;
 
     return element.id;
 

@@ -89,19 +89,20 @@ export class User {
     };
 
     async #hashPass (pass) { 
-        
+
         VALIDATIONS.emptyField({ pass });
         return await hashPassword(pass);
 
     };
 
     async asDto () {
-        
+
+        await VALIDATIONS.verifyPass(this.#pass);
+
         const 
         
-        PASS     = this.#pass,
-        NEW_PASS = await this.#hashPass(PASS),
-        ROLE     = await VALIDATIONS.verifyEmail(email);
+        NEW_PASS = await this.#hashPass(this.#pass),
+        ROLE     = await VALIDATIONS.verifyEmail(this.#email);
 
         return new UserDTO({
 

@@ -1,6 +1,8 @@
 import { getKey, getValue } from "../utils/object_utils.js";
+import { verifyPassword } from "../utils/bcrypt.js";
 import ErrIdNotFound from "../models/errors/error_id_not_found.js";
 import ErrUserAlreadyExists from "../models/errors/error_user_already_exists.js";
+import ErrPassword from "../models/errors/error_password.js";
 
 export class UserDAO {
 
@@ -49,12 +51,25 @@ export class UserDAO {
 
             this.findByUserProp(
                 QUERY_PROP, 
-                { error: false }
+                false
             );
 
         if (EXISTS) throw new ErrUserAlreadyExists(EXISTS.email);
 
         return await this.#persistence.save(user);
+
+    };
+
+    async authUser (email, pass) {
+
+        const 
+        
+        USER_FOUND = await this.findByUserProp({ email }, false),
+        AUTH_PASS  = await verifyPassword(pass, USER_FOUND.pass);
+
+        if (!AUTH_PASS) throw new ErrPassword();
+
+        return USER_FOUND;
 
     };
 

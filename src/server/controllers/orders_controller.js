@@ -1,25 +1,16 @@
-import { USER_SERVICE } from "../service/user/index.js";
 import { ORDER_SERVICE } from "../service/orders/index.js";
 import { configId } from "../../config/config.js";
 
-export async function controllerGetOrders ({ headers }, res) {
+export async function controllerGetOrders ({ user }, res) {
 
-    const 
-
-    USER   = USER_SERVICE.getDataUser(headers),
-    ORDERS = await ORDER_SERVICE.getPurchaseOrdersFromUser(configId(USER));
-
+    const ORDERS = await ORDER_SERVICE.getPurchaseOrdersFromUser(configId(user));
     res.status(200).json(ORDERS);
 
 };
 
-export async function controllerPostOrder (req, res) {
+export async function controllerPostOrder ({ user }, res) {
 
-    const 
-    
-    USER  = USER_SERVICE.getDataUser(headers),
-    ORDER = await ORDER_SERVICE.createNewOrder(configId(USER), USER.email);
-
+    const ORDER = await ORDER_SERVICE.createNewOrder(configId(user), user.email);
     res.status(201).json(ORDER);
 
 };

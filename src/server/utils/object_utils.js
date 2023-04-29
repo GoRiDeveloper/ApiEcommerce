@@ -5,7 +5,7 @@ export function getKey (item, index) {
 
     if (!item) throw new ErrObject();
     if (typeof item !== "object") throw new ErrObject();
-    if (!index) throw new ErrIndex();
+    if (index !== 0 && !index) throw new ErrIndex();
     if (typeof index !== "number") throw new ErrIndex();
     
     return Object.keys(item)[index];
@@ -16,9 +16,9 @@ export function getValue (item, index) {
 
     if (!item) throw new ErrObject();    
     if (typeof item !== "object") throw new ErrObject();
-    if (!index) throw new ErrIndex();
+    if (index !== 0 && !index) throw new ErrIndex();
     if (typeof index !== "number") throw new ErrIndex();
 
-    return Object.values(item)[index]
+    return Object.values(item)[index];
 
 };

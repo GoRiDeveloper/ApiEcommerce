@@ -28,7 +28,7 @@ export class ProductService {
 
         const 
         
-        PROD    = new Product(product),
+        PROD     = new Product(product),
         PROD_DTO = PROD.asDto(),
         ADD_PROD = await this.#productDao.addProduct(PROD_DTO);
 

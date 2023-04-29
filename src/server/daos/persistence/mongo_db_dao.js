@@ -91,16 +91,19 @@ export class MongoDBDao {
 
         const 
 
-        QUERY  = { _id },
-        UPDATE = await this.#collection
+        QUERY   = { _id: { $eq: _id } },
+
+        OPTIONS = { 
+            returnDocument: "after", 
+            ...(options && options) 
+        },
+
+        UPDATE  = await this.#collection
                                 .findOneAndUpdate(
 
                                     QUERY,
                                     { $set: obj },
-                                    {
-                                        returnDocument: "after",
-                                        ...(options && options)
-                                    }
+                                    OPTIONS
                                 );
 
         if (!UPDATE.value) throw new ErrUpdate(_id);
@@ -112,14 +115,14 @@ export class MongoDBDao {
     async deleteOne (_id, pullQuery) {
 
         let deleted;
-        const QUERY = { _id };
+        const QUERY = { _id: { $eq: _id } };
 
         pullQuery
 
-            ? deleted = await this.#collection.update(QUERY, pullQuery)
+            ? deleted = await this.#collection.updateOne(QUERY, pullQuery)
             : deleted = await this.#collection.findOneAndDelete(QUERY);
-        
-        if (!deleted || !deleted?.value) throw new ErrDelete(_id);
+
+        if (!deleted) throw new ErrDelete(_id);
 
         return deleted;
 
